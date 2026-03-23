@@ -1,0 +1,37 @@
+.section {
+  padding: 0 24px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.title {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.sub {
+  text-align: center;
+  color: var(--text2);
+  font-size: 14px;
+  margin-bottom: 60px; /* ← title aur cards ke beech zyada gap */
+}
+
+.list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  /* Rotating card bahar na jaye */
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .list {
+    grid-template-columns: 1fr;
+  }
+}
