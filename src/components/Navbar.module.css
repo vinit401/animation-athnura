@@ -2,16 +2,14 @@
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 999;
+  z-index: 9999;
   height: 64px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 0 20px;
   background: transparent;
-  transition: background 0.4s, backdrop-filter 0.4s, box-shadow 0.4s;
-  /* Prevent particle bleed-through */
-  isolation: isolate;
+  transition: background 0.4s, box-shadow 0.4s;
+  /* NO transform here — causes float on mobile */
 }
 
 .nav.scrolled {
@@ -25,15 +23,16 @@
   background: rgba(245,243,255,0.88);
 }
 
-.spacer { flex: 1; }
-
-/* ── DESKTOP LINKS ── */
+/* ── DESKTOP LINKS — absolute center ── */
 .desktopLinks {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 4px;
-  flex: 1;
-  justify-content: center;
+  /* pointer-events so it doesn't block rightGroup clicks */
+  pointer-events: auto;
 }
 
 .link {
@@ -45,8 +44,9 @@
   padding: 7px 16px;
   border-radius: 20px;
   border: 1px solid transparent;
-  transition: color 0.25s, background 0.25s, border-color 0.25s;
+  transition: color 0.25s, background 0.25s;
   position: relative;
+  white-space: nowrap;
 }
 
 .link::after {
@@ -63,15 +63,13 @@
 .link:hover { color: var(--text); background: rgba(255,255,255,0.06); }
 .link:hover::after { width: 40%; }
 
-/* ── RIGHT GROUP — pill with theme + hamburger ── */
+/* ── RIGHT GROUP — always right ── */
 .rightGroup {
-  flex: 1;
+  margin-left: auto;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  /* keep it above particles */
-  position: relative;
-  z-index: 10;
+  flex-shrink: 0;
+  /* NO position/z-index tricks — pure margin-left auto is enough */
 }
 
 .themeBtn {
@@ -85,7 +83,6 @@
   border-right: none;
   border-radius: 12px 0 0 12px;
   cursor: pointer;
-  /* NO transform — prevents floating with particles */
   transition: background 0.25s ease;
 }
 .themeBtn:hover { background: rgba(255,255,255,0.16); }
@@ -96,42 +93,12 @@
   flex-shrink: 0;
 }
 
-.hamburger {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  width: 38px; height: 38px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid var(--border);
-  border-left: none;
-  border-radius: 0 12px 12px 0;
-  cursor: pointer;
-  padding: 0;
-  /* NO transform — prevents floating */
-  transition: background 0.25s ease;
-}
-.hamburger:hover { background: rgba(255,107,107,0.12); }
-
-.bar {
-  display: block;
-  width: 16px; height: 2px;
-  background: var(--text);
-  border-radius: 2px;
-  transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
-}
-
-.hamburgerOpen .bar:nth-child(1) { transform: rotate(45deg) translate(4px, 4px); }
-.hamburgerOpen .bar:nth-child(2) { opacity: 0; }
-.hamburgerOpen .bar:nth-child(3) { transform: rotate(-45deg) translate(4px, -4px); }
-
 /* ── OVERLAY ── */
 .overlay {
   position: fixed; inset: 0;
   background: rgba(0,0,0,0.55);
   backdrop-filter: blur(3px);
-  z-index: 1000;
+  z-index: 10000;
   opacity: 0; pointer-events: none;
   transition: opacity 0.35s ease;
 }
@@ -144,7 +111,7 @@
   width: 290px;
   background: var(--bg2);
   border-left: 1px solid var(--border);
-  z-index: 1001;
+  z-index: 10001;
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
@@ -240,49 +207,96 @@
   transform: translateX(-4px);
 }
 
-.drawerLinkIcon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
-
-.drawerArrow {
-  margin-left: auto; font-size: 14px; color: var(--text3);
-  transition: transform 0.2s, color 0.2s;
-}
-.drawerLink:hover .drawerArrow { transform: translateX(-4px); color: #ff6b6b; }
-
-/* ── DRAWER THEME ── */
-.drawerTheme {
-  padding: 16px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.drawerThemeLabel {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 14px; font-weight: 600;
-  color: var(--text2);
-}
-
-.drawerThemeBtn {
-  background: linear-gradient(135deg, #a78bfa, #8b5cf6);
-  color: #fff; border: none;
-  border-radius: 20px;
-  padding: 7px 18px;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px; font-weight: 600;
-  cursor: pointer;
-  transition: box-shadow 0.3s;
-  box-shadow: 0 3px 12px rgba(139,92,246,0.35);
-}
-.drawerThemeBtn:hover { box-shadow: 0 6px 20px rgba(139,92,246,0.5); }
-
-.drawerFooter {
-  padding: 14px 20px;
-  font-size: 11px; color: var(--text3);
-  text-align: center;
-  border-top: 1px solid var(--border);
-}
 
 @media (max-width: 640px) {
   .desktopLinks { display: none; }
 }
+
+/* ===== NAVBAR BASE ===== */
+.nav {
+  width: 100%;
+  padding: 15px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+/* ===== LOGO ===== */
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* ===== CENTER LINKS (DESKTOP) ===== */
+.desktopLinks {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 25px;
+}
+
+/* ===== RIGHT GROUP ===== */
+.rightGroup {
+  margin-left: 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+
+/* ===== DARK MODE TOGGLE ===== */
+.toggle {
+  cursor: pointer;
+}
+
+/* ===== MOBILE MENU (IF ANY) ===== */
+.mobileMenu {
+  display: none;
+}
+
+
+/* ============================= */
+/* ===== MOBILE FIX START ===== */
+/* ============================= */
+
+@media (max-width: 768px) {
+
+  .nav {
+    position: fixed;   /* navbar stable */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* LEFT alignment */
+    padding: 10px 15px;
+  }
+
+  /* ❌ center links hata diye mobile me */
+  .desktopLinks {
+    display: none;
+    position: static;
+    transform: none;
+    left: auto;
+  }
+
+  
+  
+  /* mobile menu agar hai */
+  .mobileMenu {
+    display: block;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+  }
+
+}
+
+/* ============================= */
+/* ===== MOBILE FIX END ===== */
+/* ============================= */

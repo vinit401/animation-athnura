@@ -57,7 +57,6 @@ export default function Hero() {
       <div className={`${styles.gradOrb} ${styles.gradOrb3}`} />
 
       {/* Back arrow — top left */}
-      <div className={styles.backBtn}>←</div>
 
       {/* Center content */}
       <div className={styles.icon}>🛒</div>
